@@ -1,0 +1,14 @@
+version: "3.3"
+services:
+  tt-admitad:
+    build:
+      ./
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - ./src:/application/src
+    command: ["/application/dev.sh"]
+
+networks:
+  backend:

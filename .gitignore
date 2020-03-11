@@ -1,0 +1,6 @@
+db-data
+node_modules
+variables.env
+*.js
+*.js.map
+!ormconfig.js
