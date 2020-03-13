@@ -22,14 +22,16 @@ export class SenderService implements ISenderService {
     ) {}
 
     public async getFileAndSend(url: string, response: IResponse, imageDb: IImageDb): Promise<any> {
-        this._logger.debug(this._loggerPrefix, `Try send file from url: ${url}`);
-        response.setHeader('Content-Type', `image/${imageDb.type}`);
         let data = null;
 
+        this._logger.info(this._loggerPrefix, `Try send file from url: ${url}, Content-Type: image/${imageDb.type}`);
+        response.setHeader('Content-Type', `image/${imageDb.type}`);
+
         try {
-            const cached = await this._redis.getBuffer(imageDb.imageId.toString());
+            const cached = imageDb.imageId ? await this._redis.getBuffer(imageDb.imageId.toString()) : false;
             if (cached) {
                 this._logger.debug(this._loggerPrefix, `Get image from cache`);
+
                 const readStream = new Readable();
                 readStream.push(cached);
                 readStream.push(null);
@@ -57,8 +59,10 @@ export class SenderService implements ISenderService {
                     response.sendStatus(res.statusCode);
                 });
                 gotStream.on('end', () => {
-                    // I think this is a bad idea for caching a file in Redis, but I don't know what else =/
-                    this._redis.setBuffer(imageDb.imageId.toString(), data, 'ex', REDIS_EX_TIME_IN_SECOND);
+                    if (imageDb.imageId) {
+                        // I think this is a bad idea for caching a file in Redis, but I don't know what else =/
+                        this._redis.setBuffer(imageDb.imageId.toString(), data, 'ex', REDIS_EX_TIME_IN_SECOND);
+                    }
                 });
 
                 gotStream.pipe(writeStream);

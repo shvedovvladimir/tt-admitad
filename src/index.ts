@@ -10,7 +10,7 @@ import configuration from '../config/configuration';
 import { ILogger } from './app/common/logger';
 import { LOGGER } from './app/tt-admitad-api-v1/di-constants';
 
-async function bootstrap(): Promise<INestApplication> {
+export async function bootstrap(): Promise<INestApplication> {
     const conf = configuration();
 
     const app = await NestFactory.create<NestExpressApplication>(

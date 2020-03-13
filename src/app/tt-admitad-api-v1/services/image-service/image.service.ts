@@ -23,6 +23,7 @@ export class ImageService implements IImageService {
 
     public async saveAndGetImage(): Promise<IImageDb> {
         this._logger.debug(this._loggerPrefix, `Try save image to db and send it to client`);
+
         const url = this._configService.get('imageApiUrl');
         const method = 'GET';
 
@@ -57,6 +58,7 @@ export class ImageService implements IImageService {
 
     public async getImageById(id: number): Promise<IImageDb> {
         this._logger.debug(this._loggerPrefix, `Try get image by id: ${id}`);
+
         try {
 
             const imgData = await this._imageRepository.createQueryBuilder()
@@ -85,6 +87,7 @@ export class ImageService implements IImageService {
 
     public async getImages(limit: number, offset: number, dataFrom?: Date, dataTo?: Date): Promise<IImageDb[]> {
         this._logger.debug(this._loggerPrefix, `Try get images limit:${limit}, offset: ${offset}`);
+
         let query = await this._imageRepository.createQueryBuilder()
                 .andWhere('deleted_at IS NULL')
                 .orderBy('created_at')
