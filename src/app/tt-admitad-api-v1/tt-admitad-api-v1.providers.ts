@@ -2,12 +2,27 @@ import { DI_CONSTANTS, LOGGER } from './di-constants';
 import { ILogger, WinstonLogger } from '../common/logger';
 import { ConfigService, ConfigModule } from '@nestjs/config';
 import { ILoggerConfig } from '../common/logger/logger.interface';
-import { VoteService } from './services/vote-service/vote.service';
+import { ImageService } from './services/image-service/image.service';
+import { SenderService } from './services/sender-service/sender.service';
+import * as IoRedis from 'ioredis';
+import { IRedisConfig } from '../../../config/configuration.interface';
 
 export const serviceContainerModule = [
     {
-        provide: DI_CONSTANTS.IVoteService,
-        useClass: VoteService,
+        provide: DI_CONSTANTS.IImageService,
+        useClass: ImageService,
+    },
+    {
+        provide: DI_CONSTANTS.ISenderService,
+        useClass: SenderService,
+    },
+    {
+        provide: DI_CONSTANTS.IRedis,
+        useFactory: (config: ConfigService): IoRedis.Redis => {
+            return new IoRedis(config.get<IRedisConfig>('redis'));
+        },
+        imports: [ConfigModule],
+        inject: [ConfigService],
     },
 ];
 

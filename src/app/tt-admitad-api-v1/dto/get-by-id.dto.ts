@@ -1,6 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 
-export class VoteResponse {
+export class GetByIdDto {
     @ApiModelProperty()
-    public readonly success: boolean;
+    public readonly id: number;
 }

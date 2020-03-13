@@ -1,4 +1,4 @@
-import {HttpStatus} from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
 
 export class CommonError extends Error {
     public status: number = HttpStatus.INTERNAL_SERVER_ERROR;

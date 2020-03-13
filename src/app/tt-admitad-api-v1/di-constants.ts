@@ -1,7 +1,9 @@
 // for DI constants
 
 export const DI_CONSTANTS = {
-    IVoteService: Symbol('IVoteService'),
+    IImageService: Symbol('IImageService'),
+    ISenderService: Symbol('ISenderService'),
+    IRedis: Symbol('IRedis'),
 
 };
 

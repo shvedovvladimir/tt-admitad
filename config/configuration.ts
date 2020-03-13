@@ -21,6 +21,11 @@ export default (): IConfiguration => ({
         guiUri: process.env.SWAGGER_GUI_URI,
         jsonUri: process.env.SWAGGER_JSON_URI,
     },
+    imageApiUrl: process.env.IMAGE_API_URL,
+    redis: {
+        port: Number(process.env.REDIS_PORT),
+        host: process.env.REDIS_HOST,
+    },
 });
 
 enum ESchemeType {

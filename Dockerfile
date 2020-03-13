@@ -51,6 +51,7 @@ RUN chmod +x wait-for-it.sh
 RUN npm ci
 
 ADD src src
+ADD var var
 
 RUN npm run build
 

@@ -2,6 +2,13 @@ export interface IConfiguration {
     readonly app: IAppConfiguration;
     readonly swagger: ISwaggerConfiguration;
     readonly logger: ILoggerConfiguration;
+    readonly imageApiUrl: string;
+    readonly redis: IRedisConfig;
+}
+
+export interface IRedisConfig {
+    readonly port: number;
+    readonly host: string;
 }
 
 export interface ISwaggerConfiguration {

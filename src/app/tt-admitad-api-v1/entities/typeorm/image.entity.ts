@@ -1,23 +1,35 @@
 import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import { IImageMeta } from '../../services/image-service/image.service.interface';
 
 @Entity({
-    name: 'vote_history',
+    name: 'image_data',
 })
-export class VoteHistoryEntity {
+export class ImageEntity {
     @PrimaryColumn({
-        name: 'vote_id',
+        name: 'image_id',
     })
-    public voteId: number;
+    public imageId: number;
 
     @Column({
-        name: 'access_key_id',
+        name: 'type',
     })
-    public accessKeyId: number;
+    public type: string;
 
     @Column({
-        name: 'vote_for_item_id',
+        name: 'title',
     })
-    public voteForItemId: number;
+    public title: string;
+
+    @Column({
+        name: 'image_url',
+    })
+    public imageUrl: string;
+
+    @Column('jsonb', {
+        nullable: true,
+        name: 'images',
+    })
+    public images: IImageMeta;
 
     @CreateDateColumn({
         name: 'created_at',

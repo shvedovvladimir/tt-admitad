@@ -1,13 +1,21 @@
-import { Module } from '@nestjs/common';
-import { VoteApiV1Module } from './tt-admitad-api-v1/vote-api-v1.module';
+import { Module, NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import configuration from '../../config/configuration';
+import { RequestIdMiddleware } from './common/middleware/request-id-middleware';
+import { TtAdmitedApiV1Module } from './tt-admitad-api-v1/tt-admitad-api-v1.module';
 @Module({
     imports: [
-        VoteApiV1Module,
+        TtAdmitedApiV1Module,
         ConfigModule.forRoot({
             load: [configuration],
         }),
     ],
 })
-export class ApplicationModule {}
+export class ApplicationModule implements NestModule {
+
+    public configure(consumer: MiddlewareConsumer): MiddlewareConsumer | void {
+        consumer
+            .apply(RequestIdMiddleware)
+            .forRoutes({ path: '*', method: RequestMethod.ALL });
+    }
+}

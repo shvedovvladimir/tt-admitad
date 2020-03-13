@@ -23,7 +23,7 @@ async function bootstrap(): Promise<INestApplication> {
     logger.replaceConsole();
 
     process.on('uncaughtException', function(err: Error): void {
-        logger.fatal('uncaughtException', err.message, err.stack);
+        logger.fatal('uncaughtException', err.message);
     });
 
     app.useGlobalFilters(app.select(CommonModule).get<ValidationExceptionFilter>(ValidationExceptionFilter));

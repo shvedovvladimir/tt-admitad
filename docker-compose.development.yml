@@ -8,7 +8,9 @@ services:
       - backend
     volumes:
       - ./src:/application/src
+      - ./var:/application/var
     command: ["/application/dev.sh"]
+    entrypoint: ["/application/wait-for-it.sh", "-s" , "-t", "60", "postgres-db:5432", "--"]
 
 networks:
   backend:

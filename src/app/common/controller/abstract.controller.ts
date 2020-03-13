@@ -1,4 +1,3 @@
-import { Request as IRequest } from 'express';
 import { IHttpResult } from '../interfaces/http-result.interface';
 
 export abstract class AbstractController {
