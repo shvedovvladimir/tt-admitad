@@ -1,8 +1,9 @@
 ## Запуск локально:
+1. git clone git@github.com:shvedovvladimir/tt-admitad.git
+2. cd tt-admitad
 
-1. `cp variables.sample.env variables.env` (конфиг берется из env параметров, описание их есть в sample файле)
-2. `make dev-init`
-3. `make dev-up`
+4. `make dev-init`
+5. `make dev-up`
 
 ## Скрипты запуска:
 
@@ -16,14 +17,18 @@
 2. Redis
 3. Nginx
 
-# Порты:
+## Порты:
 
     - app port: 9080
     - redis port: 6379
     - postgres port: 5432
     - nginx port: 80
 
-# Тесты
+## Конфиги
+
+Переменных окружения берутся из файла variables.env, примеры можно посмотреть в файле variables.sample.env. При инициализации создается копия variables.sample.env -> variables.env, запуск можно производить с параметрами по умолчанию. В случае необходимости смены переменных окружения, проверьте скрипт инициализации бд, создание базы и назначение прав происходит в нем.
+
+## Тесты
 
 1. unit: 
     - npm run test - тесты для SenderService, кэширование и отправка файлов клиенту
