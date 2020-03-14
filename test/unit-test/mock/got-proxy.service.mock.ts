@@ -1,32 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import { GotEmitter } from 'got';
+import * as got from 'got';
 import { Duplex } from 'stream';
 import { IGotProxyService } from '../../../src/app/tt-admitad-api-v1/services/proxy/got-proxy.service.interface';
+import * as nock from 'nock';
+import { GotEmitter } from 'got';
+
+
 
 @Injectable()
 export class GotProxyServiceMock implements IGotProxyService {
     public addGotStream(
         url: string,
     ): GotEmitter & Duplex {
-        let data = null;
+        nock(`https://some_url`)
+            .get('/')
+            .reply(200, Buffer.from('some_data'));
 
-        const gotStream = new Duplex();
+        nock(`https://some_url_not_valid`)
+            .get('/')
+            .reply(500, {'error': 'internal error'});
 
-        gotStream.write = (chunk, enc) => {
-            const buffer = (Buffer.isBuffer(chunk)) ?
-            chunk :  // already is Buffer use it
-            new Buffer(chunk, enc);  // string, convert
-
-            // concat to the buffer already there
-            if (!data) {
-                data = buffer;
-            } else {
-                data = Buffer.concat([data, buffer]);
-            }
-
-            return true;
-        };
-
-        return gotStream;
+        return got.stream(`https://${url}`, { method: 'GET'});
     }
 }

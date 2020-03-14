@@ -47,7 +47,7 @@ export class RedisMock  extends EventEmitter implements Redis {
         throw new Error('Not implemented in mock class');
     }
 
-    public getBuffer(key: KeyType): Promise<Buffer> {
+    public getBuffer(key: KeyType | string): Promise<Buffer> {
         return this.cache.get(key);
     }
 
@@ -57,7 +57,6 @@ export class RedisMock  extends EventEmitter implements Redis {
 
     public setBuffer(...args: any[]): Promise<any> {
         this.cache.set(args[0], args[1]);
-
         setTimeout(() => {
             this.cache.delete(args[0]);
         }, args[3]);

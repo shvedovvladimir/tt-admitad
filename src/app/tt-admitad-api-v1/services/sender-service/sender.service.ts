@@ -3,13 +3,12 @@ import { LOGGER, DI_CONSTANTS } from '../../di-constants';
 import { ILogger } from '../../../common/logger';
 import { Response as IResponse } from 'express';
 import { ISenderService } from './sender.service.interface';
-import * as got from 'got';
 import { Writable, Readable } from 'stream';
 import * as IoRedis from 'ioredis';
 import { IImageDb } from '../image-service/image.service.interface';
 import { IGotProxyService } from '../proxy/got-proxy.service.interface';
 
-const REDIS_EX_TIME_IN_SECOND = 60;
+export const REDIS_EX_TIME_IN_SECOND = 60;
 
 @Injectable()
 export class SenderService implements ISenderService {
@@ -27,11 +26,15 @@ export class SenderService implements ISenderService {
     public async getFileAndSend(url: string, response: IResponse, imageDb: IImageDb): Promise<void> {
         let data = null;
 
-        this._logger.info(this._loggerPrefix, `Try send file from url: ${url}, Content-Type: image/${imageDb.type}`);
-        response.setHeader('Content-Type', `image/${imageDb.type}`);
+        this._logger
+            .info(
+                this._loggerPrefix,
+                `Try send file from url: ${url}, Content-Type: image/${imageDb && imageDb.type ? imageDb.type : 'gif'}`,
+            );
+        response.setHeader('Content-Type', `image/${imageDb && imageDb.type ? imageDb.type : 'gif'}`);
 
         try {
-            const cached = imageDb.imageId ? await this._redis.getBuffer(imageDb.imageId.toString()) : false;
+            const cached = imageDb && imageDb.imageId ? await this._redis.getBuffer(imageDb.imageId.toString()) : false;
             if (cached) {
                 this._logger.debug(this._loggerPrefix, `Get image from cache`);
 
@@ -63,7 +66,7 @@ export class SenderService implements ISenderService {
                     response.sendStatus(res.statusCode);
                 });
                 gotStream.on('end', () => {
-                    if (imageDb.imageId) {
+                    if (imageDb && imageDb.imageId) {
                         // I think this is a bad idea for caching a file in Redis, but I don't know what else =/
                         this._redis.setBuffer(imageDb.imageId.toString(), data, 'ex', REDIS_EX_TIME_IN_SECOND);
                     }
