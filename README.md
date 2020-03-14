@@ -1,8 +1,8 @@
 ## Запуск локально:
 
 Утановить docker-compose и Make (если нет)
-docker-compose: https://github.com/Yelp/docker-compose/blob/master/docs/install.md
-Make: brew install make (или другой пакетный менеджер)
+- docker-compose: https://github.com/Yelp/docker-compose/blob/master/docs/install.md
+- Make: brew install make (или другой пакетный менеджер)
 
 1. git clone git@github.com:shvedovvladimir/tt-admitad.git
 2. cd tt-admitad
