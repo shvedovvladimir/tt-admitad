@@ -88,16 +88,30 @@ export class ImageService implements IImageService {
     public async getImages(limit: number, offset: number, dataFrom?: Date, dataTo?: Date): Promise<IImageDb[]> {
         this._logger.debug(this._loggerPrefix, `Try get images limit:${limit}, offset: ${offset}`);
 
-        let query = await this._imageRepository.createQueryBuilder()
+        try {
+
+            let query = await this._imageRepository.createQueryBuilder()
                 .andWhere('deleted_at IS NULL')
                 .orderBy('created_at')
                 .limit(limit)
                 .offset(offset);
 
-        if (dataFrom && dataTo) {
-            query = query.where(' created_at BETWEEN :dataFrom AND :dataTo', {dataTo, dataFrom});
-        }
+            if (dataFrom && dataTo) {
+                query = query.where(' created_at BETWEEN :dataFrom AND :dataTo', {dataTo, dataFrom});
+            }
 
-        return query.getMany();
+            return query.getMany();
+
+        } catch (err) {
+            this._logger.error(
+                this._loggerPrefix,
+                `Got error while getting images list`,
+                err.message,
+                'code',
+                err.code,
+            );
+
+            throw err;
+        }
     }
 }
