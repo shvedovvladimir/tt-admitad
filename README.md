@@ -31,7 +31,7 @@
 2. e2e: 
     - make dev-up
     - npm run test:e2e - тесты по ручкам api
-    ![Screenshot](./docs/ete.jpg)
+    ![Screenshot](./docs/e2e.jpg)
 3. coverage: 
     - make dev-up
     - npm run test:cov
