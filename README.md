@@ -10,8 +10,29 @@
 2. migrations.sh - выполнение миграций.
 3. dev.sh выполнение миграций + тестовые данные + запуск в watch and rebuild режиме.
 
-
 ## Зависимости:
 
 1. Postgres
 2. Redis
+3. Nginx
+
+# Порты:
+
+    - app port: 9080
+    - redis port: 6379
+    - postgres port: 5432
+    - nginx port: 80
+
+# Тесты
+
+1. unit: 
+    - npm run test - тесты для SenderService, кэширование и отправка файлов клиенту
+    ![Screenshot](./docs/unit.jpg)
+2. e2e: 
+    - make dev-up
+    - npm run test:e2e - тесты по ручкам api
+    ![Screenshot](./docs/ete.jpg)
+3. coverage: 
+    - make dev-up
+    - npm run test:cov
+    ![Screenshot](./docs/cov.jpg)

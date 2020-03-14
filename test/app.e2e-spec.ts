@@ -128,7 +128,7 @@ describe('AppController (e2e)', () => {
   it('/ (GET) /api/images with out query params should get status 400', async (done) => {
     const resp = await request(app.getHttpServer())
       .get('/api/images').expect(400);
-      console.log(resp.body.error.details[0])
+
     expect(resp).toHaveProperty('body');
     expect(resp.body).toHaveProperty('error');
     expect(resp.body.error).toHaveProperty('statusCode');
@@ -151,7 +151,7 @@ describe('AppController (e2e)', () => {
   it('/ (GET) /api/images with out offset query param should get status 400', async (done) => {
     const resp = await request(app.getHttpServer())
       .get('/api/images?limit=1').expect(400);
-      console.log(resp.body.error.details[0])
+
     expect(resp).toHaveProperty('body');
     expect(resp.body).toHaveProperty('error');
     expect(resp.body.error).toHaveProperty('statusCode');
