@@ -27,12 +27,12 @@
 
 1. unit: 
     - npm run test - тесты для SenderService, кэширование и отправка файлов клиенту
-    ![Screenshot](./docs/unit.jpg)
+    ![Screenshot](./docs/unit.png)
 2. e2e: 
     - make dev-up
     - npm run test:e2e - тесты по ручкам api
-    ![Screenshot](./docs/ete.jpg)
+    ![Screenshot](./docs/ete.png)
 3. coverage: 
     - make dev-up
     - npm run test:cov
-    ![Screenshot](./docs/cov.jpg)
+    ![Screenshot](./docs/cov.png)
