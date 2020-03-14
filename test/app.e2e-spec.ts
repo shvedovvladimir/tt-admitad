@@ -3,14 +3,14 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { ApplicationModule } from './../src/app/app.module';
 import { getConnection } from 'typeorm';
-import { bootstrap } from './../src/index';
 import { ValidationExceptionFilter } from '../src/app/common/filter/validation-exception.filter';
 import { CommonModule } from '../src/app/common/common.module';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
+  let connect = null;
 
-  beforeEach(async () => {
+  beforeAll(async (done) => {
     process.env = Object.assign(process.env, {
       POSTGRESQL_DB: 'tt_admitad_db',
       POSTGRESQL_USER: 'postgres_app',
@@ -34,39 +34,89 @@ describe('AppController (e2e)', () => {
     app.useGlobalFilters(app.select(CommonModule).get<ValidationExceptionFilter>(ValidationExceptionFilter));
 
     await app.init();
+
+    connect = await getConnection();
+
+    done();
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     if (app) {
-      // drop database
-      await getConnection();
-      // close database connections
       await app.close();
     }
   });
 
-  it('/ (GET) /api/healthcheck', () => {
-    return request(app.getHttpServer())
+  it('/ (GET) /api/healthcheck should get status 200', async (done) => {
+    await request(app.getHttpServer())
       .get('/api/healthcheck')
       .expect(200);
+
+    done();
   });
-  it('/ (POST) /api/image', () => {
-    return request(app.getHttpServer())
+
+  it('/ (POST) /api/image should get status 200 and body instanceof buffer', async (done) => {
+    const res = await request(app.getHttpServer())
       .post('/api/image')
       .expect(200);
-  });
-  it('/ (GET) /api/image/1', () => {
-    return request(app.getHttpServer())
-      .get('/api/image/1')
+
+    expect(res.body instanceof Buffer).toBe(true);
+
+    done();
+  }, 30000);
+
+  it('/ (GET) /api/image/some_valid_number should get status 200 and body instanceof buffer', async (done) => {
+    const someImg = await connect.createQueryBuilder()
+      .from('production.image_data')
+      .andWhere('deleted_at IS NULL')
+      .limit(1)
+      .getRawOne();
+
+    const res = await request(app.getHttpServer())
+      .get(`/api/image/${someImg.image_id}`)
       .expect(200);
-  });
-  it('/ (GET) /api/image/not_valid_id', () => {
-    return request(app.getHttpServer())
+
+    expect(res.body).toBeInstanceOf(Buffer);
+
+    done();
+  }, 30000);
+
+  it('/ (GET) /api/image/not_valid_id should get status 400', async (done) => {
+    await request(app.getHttpServer())
       .get('/api/image/afafasf')
       .expect(400);
+
+    done();
   });
-  it('/ (GET) /api/images with out query params', async () => {
+
+  it('/ (GET) /api/images with out query params should get status 400', async (done) => {
     await request(app.getHttpServer())
       .get('/api/images').expect(400);
+
+    done();
+  });
+
+  it('/ (GET) /api/images should get status 200 and resp array ot img info with length 1', async (done) => {
+    const res = await request(app.getHttpServer())
+      .get('/api/images?limit=1&offset=0').expect(200);
+
+    expect(res).toHaveProperty('body');
+    expect(res.body).toHaveProperty('result');
+    expect(res.body.result).toBeInstanceOf(Array);
+    expect(res.body.result.length).toBe(1);
+
+    done();
+  });
+
+  it('/ (GET) /api/images should get status 200 and resp array ot img info with length 0', async (done) => {
+    const res = await request(app.getHttpServer())
+      .get('/api/images?limit=1&offset=0&dateFrom=2014-02-27T10%3A00%3A00&dateTo=2014-02-27T10%3A00%3A00')
+      .expect(200);
+
+    expect(res).toHaveProperty('body');
+    expect(res.body).toHaveProperty('result');
+    expect(res.body.result).toBeInstanceOf(Array);
+    expect(res.body.result.length).toBe(0);
+
+    done();
   });
 });

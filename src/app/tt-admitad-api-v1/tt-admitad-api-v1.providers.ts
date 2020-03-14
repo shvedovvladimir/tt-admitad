@@ -6,6 +6,7 @@ import { ImageService } from './services/image-service/image.service';
 import { SenderService } from './services/sender-service/sender.service';
 import * as IoRedis from 'ioredis';
 import { IRedisConfig } from '../../../config/configuration.interface';
+import { GotProxyService } from './services/proxy/got-proxy.service';
 
 export const serviceContainerModule = [
     {
@@ -15,6 +16,10 @@ export const serviceContainerModule = [
     {
         provide: DI_CONSTANTS.ISenderService,
         useClass: SenderService,
+    },
+    {
+        provide: DI_CONSTANTS.IGotProxyService,
+        useClass: GotProxyService,
     },
     {
         provide: DI_CONSTANTS.IRedis,

@@ -7,6 +7,7 @@ import * as got from 'got';
 import { Writable, Readable } from 'stream';
 import * as IoRedis from 'ioredis';
 import { IImageDb } from '../image-service/image.service.interface';
+import { IGotProxyService } from '../proxy/got-proxy.service.interface';
 
 const REDIS_EX_TIME_IN_SECOND = 60;
 
@@ -19,9 +20,11 @@ export class SenderService implements ISenderService {
         private readonly _logger: ILogger,
         @Inject(DI_CONSTANTS.IRedis)
         private readonly _redis: IoRedis.Redis,
+        @Inject(DI_CONSTANTS.IGotProxyService)
+        private readonly _gotProxyService: IGotProxyService,
     ) {}
 
-    public async getFileAndSend(url: string, response: IResponse, imageDb: IImageDb): Promise<any> {
+    public async getFileAndSend(url: string, response: IResponse, imageDb: IImageDb): Promise<void> {
         let data = null;
 
         this._logger.info(this._loggerPrefix, `Try send file from url: ${url}, Content-Type: image/${imageDb.type}`);
@@ -53,7 +56,8 @@ export class SenderService implements ISenderService {
 
                     return true;
                 };
-                const gotStream = got.stream(url, { method: 'GET'});
+                const gotStream = this._gotProxyService.addGotStream(url);
+
                 gotStream.on('error', (err, body, res) => {
                     this._onError(err, url);
                     response.sendStatus(res.statusCode);
@@ -67,8 +71,6 @@ export class SenderService implements ISenderService {
 
                 gotStream.pipe(writeStream);
                 await gotStream.pipe(response);
-
-                return null;
             }
         } catch (err) {
             this._onError(err, url);

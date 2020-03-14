@@ -93,10 +93,7 @@ export class ImageController extends AbstractController {
         const imgDataJson = await this._imageService
             .getImageById(getByIdDto.id);
 
-        const cached = await this._senderService.getFileAndSend(imgDataJson.imageUrl, response, imgDataJson);
-        if (cached) {
-            return cached;
-        }
+        await this._senderService.getFileAndSend(imgDataJson.imageUrl, response, imgDataJson);
     }
 
     @Get('images')

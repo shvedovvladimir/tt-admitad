@@ -1,5 +1,5 @@
 {
-    "rootDir": "tests/",
+    "rootDir": "test/unit-test",
     "moduleFileExtensions": ["js", "ts"],
     "preset": "ts-jest"
 }
