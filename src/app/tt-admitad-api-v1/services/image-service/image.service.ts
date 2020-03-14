@@ -67,7 +67,7 @@ export class ImageService implements IImageService {
                 .getOne();
 
             if (!imgData) {
-                throw new NotFoundError({message: `image with id: ${id} not found`});
+                throw new NotFoundError({details: `image with id: ${id} not found`});
             }
 
             return imgData;

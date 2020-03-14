@@ -38,7 +38,12 @@ export class ErrorFilter implements ExceptionFilter {
         if (catchedErr.stack) {
             exception.stack = catchedErr.stack;
         }
-        const details = exception.message || 'Internal error';
+
+        const details = exception.message ||
+            (
+                exception.publicDetails && exception.publicDetails.details ?
+                exception.publicDetails.details : 'Internal error'
+            );
 
         response
             .status(exception.status)

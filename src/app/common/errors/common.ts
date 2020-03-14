@@ -7,7 +7,7 @@ export class CommonError extends Error {
         public message: string,
         public code: string,
         public innerDetails?: object,
-        public publicDetails?: object,
+        public publicDetails?: any,
     ) {
         super(message);
     }
