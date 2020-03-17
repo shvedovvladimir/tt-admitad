@@ -7,11 +7,13 @@
 1. git clone git@github.com:shvedovvladimir/tt-admitad.git
 2. cd tt-admitad
 
-4. `make dev-init`
-5. `make dev-up`
+4. `make dev-init` - инициализация, установка зависимостей, создание директорий
+5. `make dev-up` - запуск в docker-compose сервиса + Postgres, Redis, Nginx
 
-## Скрипты запуска:
+http://localhost/swagger/ - свагер с апи.
 
+## Скрипты запуска
+:
 1. start.sh - запуск приложения.
 2. migrations.sh - выполнение миграций.
 3. dev.sh выполнение миграций + тестовые данные + запуск в watch and rebuild режиме.
