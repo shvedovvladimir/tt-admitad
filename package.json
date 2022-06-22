@@ -30,7 +30,7 @@
     "cls-hooked": "^4.2.2",
     "config": "2.0.1",
     "cookie-parser": "^1.4.3",
-    "got": "^9.6.0",
+    "got": "^11.8.5",
     "ioredis": "^4.16.0",
     "moment": "^2.24.0",
     "node-gyp": "^6.1.0",
